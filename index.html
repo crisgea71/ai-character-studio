@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Character Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0f;color:#e8e8f0;font-family:'DM Sans',sans-serif;min-height:100vh}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+header{padding:36px 0 24px;text-align:center;border-bottom:1px solid #2a2a3a;margin-bottom:28px}
+.badge{display:inline-block;background:linear-gradient(135deg,#f0c060,#e8a030);color:#000;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:14px}
+h1{font-family:'Playfair Display',serif;font-size:clamp(26px,5vw,52px);font-weight:900;margin-bottom:8px}
+h1 em{background:linear-gradient(135deg,#f0c060,#ff6b35);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
+.sub{color:#7070a0;font-size:13px;margin-bottom:18px}
+.keyrow{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.keyin{background:#1a1a24;border:1px solid #2a2a3a;color:#e8e8f0;padding:10px 15px;border-radius:10px;font-size:13px;width:320px;outline:none;font-family:'DM Sans',sans-serif}
+.keybtn{background:linear-gradient(135deg,#f0c060,#e8a030);color:#000;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:700;font-size:13px;font-family:'DM Sans',sans-serif}
+.keynote{color:#7070a0;font-size:11px;margin-top:6px}
+.panel{background:#13131a;border:1px solid #2a2a3a;border-radius:14px;padding:20px;margin-bottom:20px}
+.ptitle{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7070a0;margin-bottom:10px}
+.pills{display:flex;flex-wrap:wrap;gap:7px}
+.pill{background:#1a1a24;border:2px solid #2a2a3a;color:#e8e8f0;padding:7px 13px;border-radius:20px;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.pill:hover{border-color:#f0c060}
+.pill.ha{background:rgba(255,107,53,0.15);border-color:#ff6b35;color:#ff6b35;font-weight:700}
+.pill.ta{background:rgba(240,192,96,0.15);border-color:#f0c060;color:#f0c060;font-weight:700}
+.custin{background:#1a1a24;border:1px solid #2a2a3a;color:#e8e8f0;padding:7px 13px;border-radius:20px;font-size:12px;outline:none;font-family:'DM Sans',sans-serif;width:200px}
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:10px}
+.char-card{background:#1a1a24;border:2px solid #2a2a3a;border-radius:12px;padding:14px 10px;cursor:pointer;text-align:center;transition:all 0.2s;position:relative}
+.char-card:hover{border-color:#f0c060;transform:translateY(-2px)}
+.char-card.ca{border-color:#f0c060;background:rgba(240,192,96,0.1)}
+.char-em{font-size:26px;margin-bottom:5px}
+.char-name{font-size:11px;font-weight:700;color:#e8e8f0;margin-bottom:2px}
+.char-desc{font-size:10px;color:#7070a0;line-height:1.3}
+.char-del{display:none;position:absolute;top:4px;right:4px;background:#ff4444;color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:10px;cursor:pointer;line-height:16px;text-align:center;padding:0}
+.char-card.custom:hover .char-del{display:block}
+.add-char-card{background:#1a1a24;border:2px dashed #2a2a3a;border-radius:12px;padding:14px 10px;cursor:pointer;text-align:center;transition:all 0.2s;color:#7070a0}
+.add-char-card:hover{border-color:#f0c060;color:#f0c060}
+.wnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:14px 20px;background:#13131a;border:1px solid #2a2a3a;border-radius:12px;flex-wrap:wrap;gap:10px}
+.wlbl{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#f0c060}
+.hinfo{font-size:11px;color:#7070a0;margin-top:3px}
+.hinfo button{background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;text-decoration:underline}
+.hcl{color:#7070a0}.hvw{color:#f0c060}
+.navbtns{display:flex;gap:8px}
+.bno{background:#1a1a24;border:1px solid #2a2a3a;color:#e8e8f0;padding:8px 15px;border-radius:9px;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.bno:hover{border-color:#f0c060;color:#f0c060}
+.bgo{background:linear-gradient(135deg,#f0c060,#e8a030);color:#000;border:none;padding:8px 18px;border-radius:9px;cursor:pointer;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif}
+.dgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:28px}
+.dc{background:#13131a;border:2px solid #2a2a3a;border-radius:12px;padding:12px 6px;cursor:pointer;text-align:center;transition:all 0.2s}
+.dc:hover,.dc.act{border-color:#f0c060;background:#1a1a24}
+.dc.done{border-color:#30a060}
+.dem{font-size:15px;margin-bottom:3px}
+.dna{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7070a0;margin-bottom:3px}
+.dc.act .dna{color:#f0c060}
+.dnu{font-family:'Playfair Display',serif;font-size:19px;font-weight:700}
+.ddot{width:5px;height:5px;background:#30a060;border-radius:50%;margin:4px auto 0;display:none}
+.dc.done .ddot{display:block}
+.ca-area{min-height:300px}
+.es{text-align:center;padding:60px 20px;color:#7070a0}
+.esem{font-size:54px;margin-bottom:12px}
+.es h3{font-family:'Playfair Display',serif;font-size:19px;color:#e8e8f0;margin-bottom:8px}
+.story-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.story-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700}
+.story-title span{color:#f0c060}
+.smeta{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-right:5px}
+.hbdg{background:rgba(255,107,53,0.2);color:#ff6b35;border:1px solid #ff6b35}
+.cbdg{background:rgba(240,192,96,0.15);color:#f0c060;border:1px solid #f0c060}
+.brg{background:none;border:1px solid #2a2a3a;color:#7070a0;padding:8px 14px;border-radius:9px;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif}
+.brg:hover{border-color:#f0c060;color:#f0c060}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;margin-bottom:22px}
+.vc{background:#1a1a24;border:2px solid #2a2a3a;border-radius:13px;padding:20px;cursor:pointer;transition:all 0.25s}
+.vc:hover{border-color:#f0c060;transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,0.4)}
+.vc.sel{border-color:#30a060;background:rgba(48,160,96,0.07)}
+.vnum{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#f0c060;margin-bottom:7px}
+.vc.sel .vnum{color:#50d090}
+.vtl{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;margin-bottom:6px;line-height:1.3}
+.vsi{font-size:12px;color:#7070a0;line-height:1.6;margin-bottom:10px}
+.vtgs{display:flex;flex-wrap:wrap;gap:4px}
+.vtg{background:#13131a;border:1px solid #2a2a3a;color:#7070a0;font-size:10px;padding:2px 7px;border-radius:20px}
+.bsel{width:100%;margin-top:10px;background:linear-gradient(135deg,#f0c060,#e8a030);color:#000;border:none;padding:9px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif}
+.bselbdg{display:none;width:100%;margin-top:10px;background:rgba(48,160,96,0.15);color:#50d090;border:1px solid #30a060;padding:9px;border-radius:8px;font-size:12px;font-weight:700;text-align:center}
+.vc.sel .bsel{display:none}
+.vc.sel .bselbdg{display:block}
+.fp{background:#1a1a24;border:2px solid #30a060;border-radius:16px;padding:26px;margin-top:18px;animation:fu 0.3s ease}
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.fph{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid #2a2a3a;flex-wrap:wrap;gap:8px}
+.fptl{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#50d090}
+.fpbtns{display:flex;gap:7px;flex-wrap:wrap}
+.bca{background:#30a060;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif}
+.brm{background:#8060f0;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif}
+.ptabs{display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap}
+.ptab{background:#13131a;border:1px solid #2a2a3a;color:#7070a0;padding:6px 12px;border-radius:7px;cursor:pointer;font-size:11px;font-weight:600;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.ptab.ig.on{background:#E1306C;border-color:#E1306C;color:#fff}
+.ptab.tt.on{background:#010101;border-color:#69C9D0;color:#69C9D0}
+.ptab.xp.on{background:#111;border-color:#aaa;color:#fff}
+.ptab.yt.on{background:#FF0000;border-color:#FF0000;color:#fff}
+.pct{display:none}.pct.on{display:block}
+.sec{margin-bottom:18px}
+.sl{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#f0c060;margin-bottom:7px;display:flex;align-items:center;gap:7px}
+.sl::after{content:'';flex:1;height:1px;background:#2a2a3a}
+.bx{background:#13131a;border:1px solid #2a2a3a;border-radius:9px;padding:13px 15px;font-size:13px;line-height:1.7;position:relative}
+.bx.pr{font-style:italic;color:#a0a0c0;font-size:12px}
+.cp{position:absolute;top:7px;right:7px;background:#1a1a24;border:1px solid #2a2a3a;color:#7070a0;padding:3px 8px;border-radius:5px;cursor:pointer;font-size:10px;font-weight:600;font-family:'DM Sans',sans-serif}
+.cp:hover{color:#f0c060;border-color:#f0c060}
+.acts{display:flex;flex-direction:column;gap:5px}
+.act{border-left:3px solid #f0c060;padding:6px 11px;background:rgba(240,192,96,0.07);border-radius:0 7px 7px 0;font-weight:600;font-size:13px}
+.tbox{display:flex;flex-wrap:wrap;gap:5px;padding:11px 15px;background:#13131a;border:1px solid #2a2a3a;border-radius:9px}
+.ht{color:#f0c060;font-size:12px;cursor:pointer}
+.ccol{display:flex;flex-direction:column;gap:7px}
+.cbx{background:#13131a;border:1px solid #2a2a3a;border-radius:9px;padding:13px 15px;font-size:13px;line-height:1.7;position:relative}
+.clb{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.cgr{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.cbx2{background:#13131a;border:1px solid #2a2a3a;border-radius:9px;padding:11px 13px;font-size:12px;line-height:1.6}
+.clb2{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#f0c060;margin-bottom:4px}
+.clips-grid{display:flex;flex-direction:column;gap:14px;margin-bottom:18px}
+.clip-card{background:#13131a;border:1px solid #2a2a3a;border-radius:11px;padding:16px;position:relative}
+.clip-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.clip-num{background:linear-gradient(135deg,#f0c060,#e8a030);color:#000;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap}
+.clip-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700}
+.clip-timing{color:#f0c060;font-size:11px;font-weight:700;margin-left:auto;white-space:nowrap}
+.clip-prompt{font-style:italic;color:#a0a0c0;font-size:12px;line-height:1.7;margin-bottom:8px;background:#0a0a0f;border:1px solid #2a2a3a;border-radius:7px;padding:11px 13px;position:relative}
+.total-bar{background:rgba(240,192,96,0.1);border:1px solid #f0c060;border-radius:9px;padding:10px 16px;margin-bottom:16px;text-align:center;font-size:13px;font-weight:600;color:#f0c060}
+.tpbx{background:rgba(240,192,96,0.05);border:1px solid #f0c060;border-radius:9px;padding:14px 17px}
+.tp{display:flex;gap:9px;margin-bottom:8px;font-size:12px;line-height:1.5}
+.tp:last-child{margin-bottom:0}
+.wplan{margin-top:36px;padding-top:28px;border-top:1px solid #2a2a3a;margin-bottom:44px}
+.wptl{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;margin-bottom:14px}
+.pgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.pi{background:#13131a;border:1px solid #2a2a3a;border-radius:10px;padding:9px 5px;text-align:center;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;transition:all 0.2s}
+.pi.fl{border-color:#30a060;background:rgba(48,160,96,0.06)}
+.pi:hover{transform:translateY(-2px)}
+.pdn{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7070a0}
+.pi.fl .pdn{color:#50d090}
+.pct2{font-size:10px;color:#e8e8f0;line-height:1.3}
+.pem{font-size:19px;opacity:0.2}
+.ld{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px;gap:16px}
+.sp{width:42px;height:42px;border:3px solid #2a2a3a;border-top-color:#f0c060;border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.lt{color:#7070a0;font-size:13px}
+.toast{position:fixed;bottom:26px;right:26px;background:#f0c060;color:#000;padding:11px 20px;border-radius:9px;font-weight:700;font-size:13px;transform:translateY(80px);opacity:0;transition:all 0.3s;z-index:900}
+.toast.show{transform:translateY(0);opacity:1}
+.free-badge{position:fixed;top:16px;right:16px;background:rgba(240,192,96,0.15);border:1px solid #f0c060;color:#f0c060;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;z-index:100}
+.free-badge.used{background:rgba(255,107,53,0.15);border-color:#ff6b35;color:#ff6b35}
+/* Modals */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:2000;align-items:center;justify-content:center}
+.modal-bg.show{display:flex}
+.modal-box{background:#1a1a24;border:1px solid #2a2a3a;border-radius:18px;padding:30px;width:440px;max-width:92vw;max-height:90vh;overflow-y:auto}
+.modal-title{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;margin-bottom:5px}
+.modal-sub{color:#7070a0;font-size:12px;margin-bottom:20px;line-height:1.6}
+.mfl{margin-bottom:13px}
+.mlb{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7070a0;margin-bottom:6px;display:block}
+.min{width:100%;background:#13131a;border:1px solid #2a2a3a;color:#e8e8f0;padding:10px 13px;border-radius:9px;font-size:13px;outline:none;font-family:'DM Sans',sans-serif}
+.min:focus{border-color:#f0c060}
+textarea.min{resize:vertical;min-height:90px;line-height:1.6}
+.mrow{display:flex;gap:10px}
+.mbtns{display:flex;gap:9px;margin-top:18px}
+.mbtn-primary{flex:1;background:linear-gradient(135deg,#f0c060,#e8a030);color:#000;border:none;padding:12px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif}
+.mbtn-purple{flex:1;background:linear-gradient(135deg,#8060f0,#6040d0);color:#fff;border:none;padding:12px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif}
+.mbtn-cancel{background:none;border:1px solid #2a2a3a;color:#7070a0;padding:12px 16px;border-radius:10px;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif}
+.emoji-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.ep{font-size:20px;cursor:pointer;padding:3px 5px;border-radius:6px;transition:all 0.15s}
+.ep:hover,.ep.sel{background:rgba(240,192,96,0.2)}
+.pw-price{color:#e8e8f0;font-size:15px;font-weight:700;margin-bottom:16px;text-align:center}
+.pw-err{color:#ff6b35;font-size:12px;margin-top:6px;display:none;text-align:center}
+@media(max-width:700px){.dgrid,.pgrid{grid-template-columns:repeat(4,1fr)}.vgrid{grid-template-columns:1fr}.cgr{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="badge">🎬 AI Character Studio</div>
+  <h1>AI <em>Character Studio</em></h1>
+  <p class="sub">3-clip story format · Any character · Any platform · Powered by Claude AI</p>
+  <p class="keynote" style="color:#50d090;font-size:13px;margin-top:4px">✅ Powered by AI — ready to use</p>
+</header>
+
+<div class="panel">
+  <div class="ptitle">🎭 Choose Your Character</div>
+  <div class="char-grid" id="charGrid"></div>
+</div>
+
+<div class="panel">
+  <div class="ptitle">😂 Humor Style</div>
+  <div class="pills" id="hpills">
+    <button class="pill ha" data-v="Absurd-Ironic">🌀 Absurd-Ironic</button>
+    <button class="pill" data-v="Dry Humour">😐 Dry Humour</button>
+    <button class="pill" data-v="Slapstick">🤪 Slapstick</button>
+    <button class="pill" data-v="Dark Comedy">🖤 Dark Comedy</button>
+    <button class="pill" data-v="Wholesome Funny">😇 Wholesome</button>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="ptitle">🎯 Weekly Theme</div>
+  <div class="pills" id="tpills">
+    <button class="pill ta" data-v="vs modern technology gadgets and apps">🤖 Technology</button>
+    <button class="pill" data-v="in nature camping fishing garden hiking">🌿 Nature</button>
+    <button class="pill" data-v="at the gym yoga class or swimming pool">🏋️ Sport</button>
+    <button class="pill" data-v="on vacation airplane hotel beach tourist traps">✈️ Vacation</button>
+    <button class="pill" data-v="vs animals dogs cats birds squirrels chickens">🐾 Animals</button>
+    <button class="pill" data-v="at a restaurant wedding or doctor appointment">🍽️ Social</button>
+    <button class="pill" data-v="vs modern food avocado toast sushi smoothie bowls">🥑 Food</button>
+    <button class="pill" data-v="at the mall supermarket or self-checkout">🛒 Shopping</button>
+    <button class="pill" data-v="vs kids and teenagers doing TikTok trends">👶 Kids</button>
+    <input type="text" class="custin" id="custTheme" placeholder="✏️ Custom theme...">
+  </div>
+</div>
+
+<div class="wnav">
+  <div>
+    <div class="wlbl" id="wlbl">This Week</div>
+    <div class="hinfo">
+      <span id="hcnt">0 stories used</span> &nbsp;·&nbsp;
+      <button class="hcl" id="hclrBtn">clear</button> &nbsp;·&nbsp;
+      <button class="hvw" id="hvwBtn">view all</button>
+    </div>
+  </div>
+  <div class="navbtns">
+    <button class="bno" id="genBtn">⚡ Generate This Week</button>
+    <button class="bgo" id="gen7Btn">🎬 Generate All 7 Days</button>
+  </div>
+</div>
+
+<div class="dgrid" id="dgrid"></div>
+<div class="ca-area" id="caArea">
+  <div class="es"><div class="esem">🎬</div><h3>Pick a character, humor style + theme</h3><p>Then click any day to generate 3 stories.<br>Each story = 3 Kling clips ready to film.</p></div>
+</div>
+
+<div class="wplan">
+  <div class="wptl">📅 Weekly Plan</div>
+  <div class="pgrid" id="pgrid"></div>
+</div>
+</div>
+
+<!-- Add Character Modal -->
+<div class="modal-bg" id="addCharModal">
+  <div class="modal-box">
+    <div class="modal-title">✨ Add Custom Character</div>
+    <p class="modal-sub">Create your own character — the AI will generate 3-clip stories in their unique style.</p>
+    <div class="mrow">
+      <div class="mfl" style="width:80px">
+        <label class="mlb">Emoji</label>
+        <input class="min" id="acEmoji" placeholder="⭐" maxlength="2" style="text-align:center;font-size:22px;padding:8px">
+      </div>
+      <div class="mfl" style="flex:1">
+        <label class="mlb">Character Name</label>
+        <input class="min" id="acName" placeholder="e.g. Clumsy Superhero">
+      </div>
+    </div>
+    <div class="mfl">
+      <label class="mlb">Short Description (shown on card)</label>
+      <input class="min" id="acShortDesc" placeholder="e.g. Saves the world, accidentally">
+    </div>
+    <div class="mfl">
+      <label class="mlb">Full Description for AI (more detail = better prompts)</label>
+      <textarea class="min" id="acFullDesc" placeholder="Describe personality, how they behave, what makes them funny, signature moves or reactions..."></textarea>
+    </div>
+    <div class="mfl">
+      <label class="mlb">Quick Emoji Picker</label>
+      <div class="emoji-row" id="emojiRow">
+        <span class="ep">🦸</span><span class="ep">🧛</span><span class="ep">🤠</span><span class="ep">👩‍🍳</span>
+        <span class="ep">🕵️</span><span class="ep">🧜</span><span class="ep">🦊</span><span class="ep">🐶</span>
+        <span class="ep">👻</span><span class="ep">🧟</span><span class="ep">🦄</span><span class="ep">🐸</span>
+        <span class="ep">👩‍🚀</span><span class="ep">🧝</span><span class="ep">🤺</span><span class="ep">🦝</span>
+        <span class="ep">🧑‍🎤</span><span class="ep">🐼</span><span class="ep">🦁</span><span class="ep">🐙</span>
+      </div>
+    </div>
+    <div class="mbtns">
+      <button class="mbtn-primary" id="acSaveBtn">✅ Add Character</button>
+      <button class="mbtn-cancel" id="acCancelBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reminder Modal -->
+<div class="modal-bg" id="remModal">
+  <div class="modal-box">
+    <div class="modal-title">🗓️ Set Posting Reminder</div>
+    <p class="modal-sub">Downloads a .ics file — open it to add to Mac Calendar with notification.</p>
+    <div class="mfl"><label class="mlb">Day</label><input class="min" id="remDay" readonly></div>
+    <div class="mfl"><label class="mlb">Time</label><input type="time" class="min" id="remTime" value="18:00"></div>
+    <div class="mfl"><label class="mlb">Note</label><input class="min" id="remNote" value="Post video — all platforms"></div>
+    <div class="mbtns">
+      <button class="mbtn-purple" id="addCalBtn">📅 Add to Mac Calendar</button>
+      <button class="mbtn-cancel" id="closeRemBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Paywall Modal -->
+<div class="modal-bg" id="pwModal">
+  <div class="modal-box" style="text-align:center">
+    <div style="font-size:48px;margin-bottom:12px">🎬</div>
+    <div class="modal-title" style="color:#f0c060">You've used your 3 free stories!</div>
+    <p class="modal-sub">Get unlimited stories for any character, any platform.</p>
+    <div class="pw-price">💎 Full Access — 10€ / month</div>
+    <button class="mbtn-purple" style="width:100%;margin-bottom:16px" id="pwEmailBtn">📧 Contact for Access</button>
+    <hr style="border:none;border-top:1px solid #2a2a3a;margin-bottom:16px">
+    <label class="mlb" style="text-align:left;display:block">Already paid? Enter your password:</label>
+    <input type="password" class="min" id="pwInput" placeholder="Enter access password..." style="margin-bottom:8px">
+    <button class="mbtn-primary" style="width:100%" id="pwSubmitBtn">🔓 Unlock Full Access</button>
+    <div class="pw-err" id="pwErr">Wrong password. Try again.</div>
+    <p style="color:#7070a0;font-size:11px;margin-top:12px">We'll reply with your password within 24h.</p>
+  </div>
+</div>
+
+<div class="free-badge" id="freeBadge">3 free stories left</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// =====================
+// GLOBAL STATE
+// =====================
+var DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+var EMOJIS = ['🎬','🎭','🤖','🎪','🎯','🎉','🌟'];
+var selDay = null, weekPlan = {}, dayVars = {}, busy = false;
+var humor = 'Absurd-Ironic';
+var theme = 'vs modern technology gadgets and apps';
+var currentChar = null;
+
+var DEFAULT_CHARS = [
+  {id:'grandpa',em:'👴',name:'Grandpa',desc:'Deadpan chaos master',full:'A grumpy, confident old man resembling Leslie Nielsen who always thinks he is winning even when clearly losing. His white cat is always somewhere nearby, completely unbothered.'},
+  {id:'babyceo',em:'👶',name:'Baby CEO',desc:'Tiny boss, big decisions',full:'A very serious baby in a tiny business suit who runs meetings, fires people, and makes billion-dollar decisions with complete authority. Everyone treats him as a real CEO.'},
+  {id:'dramaticcat',em:'🐱',name:'Dramatic Cat',desc:'Every moment is a drama',full:'A very dramatic theatrical cat who overreacts to everything with maximum flair. Knocks things off tables with purpose, judges everyone, treats every moment as a Shakespearean tragedy.'},
+  {id:'karen',em:'👸',name:'Karen',desc:'Needs the manager. Now.',full:'An entitled confident woman who demands to speak to the manager everywhere — supermarket, space station, the moon. She always has a complaint and a very specific request.'},
+  {id:'robot',em:'🤖',name:'Confused Robot',desc:'Logic meets human chaos',full:'A humanoid robot trying to understand human behavior for the first time. Attempts normal human activities with complete logical precision but always misses the point hilariously.'},
+  {id:'wizard',em:'🧙',name:'Old Wizard',desc:'Magic meets modern life',full:'An ancient wizard who uses magic spells to solve modern everyday problems — traffic jams, wifi issues, IKEA furniture. The magic always works but with unexpected side effects.'}
+];
+
+// =====================
+// UTILITIES
+// =====================
+function toast(m) {
+  var t = document.getElementById('toast');
+  t.textContent = m; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+
+function getKey() { return ''; }
+
+// =====================
+// HISTORY
+// =====================
+function getHist() { try { return JSON.parse(localStorage.getItem('gph') || '[]'); } catch(e) { return []; } }
+function addHist(v) {
+  var h = getHist();
+  if (v && v.story_title) h.push({s: v.story_title, d: new Date().toISOString().slice(0,10)});
+  if (h.length > 100) h = h.slice(-100);
+  localStorage.setItem('gph', JSON.stringify(h));
+  updHCnt();
+}
+function histPrompt() {
+  var h = getHist();
+  return h.length ? '\n\nDO NOT repeat these stories:\n' + h.map(function(x){ return '- ' + x.s; }).join('\n') : '';
+}
+function updHCnt() {
+  var el = document.getElementById('hcnt');
+  if (el) el.textContent = getHist().length + ' stories used';
+}
+
+// =====================
+// PAYWALL
+// =====================
+var ACCESS_PASS = 'zum-zum';
+var FREE_LIMIT = 3;
+
+function getUsed() { return parseInt(localStorage.getItem('gp_used') || '0'); }
+function incUsed() { localStorage.setItem('gp_used', getUsed() + 1); updateBadge(); }
+function isUnlocked() { return localStorage.getItem('gp_unlocked') === '1'; }
+function updateBadge() {
+  var badge = document.getElementById('freeBadge');
+  if (!badge) return;
+  if (isUnlocked()) { badge.textContent = '✅ Full Access'; badge.classList.remove('used'); return; }
+  var left = Math.max(0, FREE_LIMIT - getUsed());
+  badge.textContent = left + ' free ' + (left === 1 ? 'story' : 'stories') + ' left';
+  badge.classList[left === 0 ? 'add' : 'remove']('used');
+}
+function checkPaywall() {
+  if (isUnlocked()) return true;
+  if (getUsed() < FREE_LIMIT) return true;
+  document.getElementById('pwModal').classList.add('show');
+  return false;
+}
+
+// =====================
+// CHARACTERS
+// =====================
+function getCustomChars() { try { return JSON.parse(localStorage.getItem('gp_chars') || '[]'); } catch(e) { return []; } }
+function saveCustomChars(chars) { localStorage.setItem('gp_chars', JSON.stringify(chars)); }
+function getAllChars() { return DEFAULT_CHARS.concat(getCustomChars()); }
+
+function renderCharGrid() {
+  var chars = getAllChars();
+  var html = '';
+  chars.forEach(function(c) {
+    var isActive = currentChar && currentChar.id === c.id;
+    var isCustom = !DEFAULT_CHARS.find(function(d){ return d.id === c.id; });
+    html += '<div class="char-card' + (isActive ? ' ca' : '') + (isCustom ? ' custom' : '') + '" data-id="' + c.id + '">';
+    if (isCustom) html += '<button class="char-del" data-delid="' + c.id + '">×</button>';
+    html += '<div class="char-em">' + c.em + '</div>';
+    html += '<div class="char-name">' + c.name + '</div>';
+    html += '<div class="char-desc">' + c.desc + '</div>';
+    html += '</div>';
+  });
+  html += '<div class="add-char-card" id="addCharCardBtn"><div style="font-size:26px;margin-bottom:5px">➕</div><div style="font-size:11px;font-weight:700">Add Character</div></div>';
+  document.getElementById('charGrid').innerHTML = html;
+
+  // Attach char card events
+  document.querySelectorAll('.char-card').forEach(function(card) {
+    card.addEventListener('click', function(e) {
+      if (e.target.classList.contains('char-del')) return;
+      var id = this.dataset.id;
+      var c = getAllChars().find(function(x){ return x.id === id; });
+      if (!c) return;
+      currentChar = c;
+      dayVars = {}; weekPlan = {};
+      renderCharGrid(); renderDays(); renderPlan();
+      document.getElementById('caArea').innerHTML = '<div class="es"><div class="esem">' + c.em + '</div><h3>' + c.name + ' selected!</h3><p>Pick humor + theme, then click a day.</p></div>';
+      toast('Character: ' + c.name);
+    });
+  });
+
+  // Delete custom char
+  document.querySelectorAll('.char-del').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var id = this.dataset.delid;
+      var chars = getCustomChars().filter(function(c){ return c.id !== id; });
+      saveCustomChars(chars);
+      if (currentChar && currentChar.id === id) currentChar = DEFAULT_CHARS[0];
+      renderCharGrid();
+      toast('Character removed.');
+    });
+  });
+
+  // Add character button
+  document.getElementById('addCharCardBtn').addEventListener('click', function() {
+    document.getElementById('addCharModal').classList.add('show');
+  });
+}
+
+// =====================
+// DAYS & PLAN
+// =====================
+function getWeekDates() {
+  var now = new Date(), d = now.getDay();
+  var mon = new Date(now); mon.setDate(now.getDate() - (d === 0 ? 6 : d - 1));
+  return DAYS.map(function(_, i) { var x = new Date(mon); x.setDate(mon.getDate() + i); return x.getDate(); });
+}
+
+function renderDays() {
+  var dates = getWeekDates(), html = '';
+  for (var i = 0; i < DAYS.length; i++) {
+    var day = DAYS[i];
+    var cls = 'dc' + (selDay === day ? ' act' : '') + (weekPlan[day] ? ' done' : '');
+    html += '<div class="' + cls + '" data-day="' + day + '"><div class="dem">' + EMOJIS[i] + '</div><div class="dna">' + day.slice(0,3) + '</div><div class="dnu">' + dates[i] + '</div><div class="ddot"></div></div>';
+  }
+  document.getElementById('dgrid').innerHTML = html;
+  document.querySelectorAll('.dc').forEach(function(el) {
+    el.addEventListener('click', function(){ selectDay(this.dataset.day); });
+  });
+}
+
+function renderPlan() {
+  var html = '';
+  for (var i = 0; i < DAYS.length; i++) {
+    var day = DAYS[i], p = weekPlan[day];
+    if (p) html += '<div class="pi fl" data-day="' + day + '"><div class="pdn">' + day.slice(0,3) + '</div><div style="font-size:14px">' + (p.emoji||currentChar.em||'✅') + '</div><div class="pct2">' + p.story_title + '</div></div>';
+    else html += '<div class="pi" data-day="' + day + '"><div class="pdn">' + day.slice(0,3) + '</div><div class="pem">+</div></div>';
+  }
+  document.getElementById('pgrid').innerHTML = html;
+  document.querySelectorAll('.pi').forEach(function(el) {
+    el.addEventListener('click', function(){ selectDay(this.dataset.day); });
+  });
+}
+
+// =====================
+// API
+// =====================
+var SYS = 'You are a world-class viral video scriptwriter specializing in physical comedy and storytelling.\n\nYou create 3-clip Kling AI video stories for the character: {CHAR_NAME}.\nCharacter description: {CHAR_DESC}\n\nHUMOR STYLE: {HUMOR}\n\nSTORY FORMAT — exactly 3 clips:\n- CLIP 1 "The Setup" — 8-9 seconds: Character confidently starts something ridiculous\n- CLIP 2 "The Chaos" — 9-10 seconds: Everything goes wrong, escalates, peaks\n- CLIP 3 "The Punchline" — 6-8 seconds: The twist ending, comeback, or dignity moment\n\nKLING PROMPT RULES for each clip:\n1. Start with character doing something with FULL CONFIDENCE\n2. Be SPECIFIC about movements and reactions\n3. Animals and objects have personality — they outsmart the character\n4. Describe sounds, facial expressions, chaos in vivid detail\n5. End each prompt with: "[Location] lighting, slapstick comedy style, [X] seconds, cinematic, vibrant colors. Subtle slow-motion on the funniest moment. First 2 seconds: [specific opening shot]. End tip: [specific freeze frame]."\n\nRespond ONLY with valid JSON. No markdown. No explanation.';
+
+var SCHEMA = '{"story_title":"Catchy story title","emoji":"one emoji","situation":"One sentence describing the full story arc","clip1":{"title":"The Setup","seconds":9,"prompt":"Full Kling prompt for clip 1","text_overlay":"On-screen text for clip 1"},"clip2":{"title":"The Chaos","seconds":10,"prompt":"Full Kling prompt for clip 2","text_overlay":"On-screen text for clip 2"},"clip3":{"title":"The Punchline","seconds":7,"prompt":"Full Kling prompt for clip 3","text_overlay":"On-screen text for clip 3"},"instagram":{"caption_short":"Short punchy caption max 150 chars","caption_story":"Storytelling 2-3 lines","caption_hook":"Strong hook stops scroll","hashtags":["funny","viral","fyp","reels","comedy","trending","relatable","shorts"],"story_poll":"Story poll question"},"tiktok":{"caption":"Punchy TikTok caption","sound_suggestion":"Sound suggestion","hashtags":["fyp","funny","viral","comedy","trending"]},"x":{"tweet":"Witty ironic tweet max 280 chars","hashtags":["funny","viral"]},"youtube":{"title":"YouTube Shorts title","caption":"YouTube caption","hashtags":["youtubeshorts","funny","viral","comedy","shorts"],"thumbnail_tip":"Thumbnail tip"}}';
+
+async function callAPI(prompt) {
+  var charDesc = currentChar ? (currentChar.full || currentChar.desc || '') : '';
+  var charName = currentChar ? currentChar.name : 'Grandpa';
+  var sys = SYS.replace('{CHAR_NAME}', charName).replace('{CHAR_DESC}', charDesc).replace('{HUMOR}', humor);
+  var res = await fetch('/.netlify/functions/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt: prompt, system: sys })
+  });
+  var data = await res.json();
+  if (data.error) throw new Error(data.error);
+  return data.text;
+}
+
+// =====================
+// GENERATION
+// =====================
+async function generateStories(day) {
+  var variants = [];
+  for (var vi = 1; vi <= 3; vi++) {
+    showLoad('Generating story ' + vi + '/3 for ' + day + '...');
+    try {
+      var used = variants.length ? '\n\nAlready generated:\n' + variants.map(function(v){ return '- ' + v.story_title; }).join('\n') : '';
+      var fullTheme = (currentChar ? currentChar.name : 'Character') + ' ' + theme;
+      var p = 'Generate ONE complete 3-clip story for ' + day + '.\nTheme: ' + fullTheme + '\nHumor: ' + humor + histPrompt() + used + '\n\nReturn ONLY this JSON:\n' + SCHEMA;
+      var raw = await callAPI(p);
+      var parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
+      parsed.id = vi;
+      variants.push(parsed);
+    } catch(e) { console.error('Story ' + vi + ' error:', e); }
+    await new Promise(function(r){ setTimeout(r, 300); });
+  }
+  return variants;
+}
+
+async function selectDay(day) {
+  selDay = day; renderDays();
+  if (dayVars[day]) { showVariants(day, dayVars[day]); return; }
+  if (!checkPaywall()) return;
+  var variants = await generateStories(day);
+  if (!variants.length) { showErr(); return; }
+  dayVars[day] = variants;
+  if (!isUnlocked()) incUsed();
+  showVariants(day, variants);
+}
+
+async function generateWeek() {
+  if (busy) return; busy = true;
+  for (var i = 0; i < DAYS.length; i++) {
+    var day = DAYS[i]; selDay = day; renderDays();
+    if (!checkPaywall()) { busy = false; return; }
+    var variants = await generateStories(day);
+    if (variants.length) {
+      dayVars[day] = variants;
+      if (!isUnlocked()) incUsed();
+    }
+  }
+  busy = false;
+  selDay = 'Monday'; renderDays(); renderPlan();
+  if (dayVars['Monday']) showVariants('Monday', dayVars['Monday']);
+  toast('Full week generated!');
+}
+
+// =====================
+// DISPLAY
+// =====================
+function showLoad(msg) { busy = true; document.getElementById('caArea').innerHTML = '<div class="ld"><div class="sp"></div><div class="lt">' + msg + '</div></div>'; }
+function showErr() { busy = false; document.getElementById('caArea').innerHTML = '<div class="es"><div class="esem">😅</div><h3>Something went wrong</h3><p>Check your API key and try again.</p></div>'; }
+
+function showVariants(day, variants) {
+  var chosen = weekPlan[day];
+  var charName = currentChar ? currentChar.name : '';
+  var html = '<div class="story-header"><div>';
+  html += '<div class="story-title">Choose story for <span>' + day + '</span></div>';
+  html += '<div style="margin-top:6px"><span class="smeta hbdg">' + humor + '</span><span class="smeta cbdg">' + charName + '</span></div>';
+  html += '</div><button class="brg" id="regenBtn">🔄 New Stories</button></div>';
+  html += '<div class="vgrid">';
+  for (var i = 0; i < variants.length; i++) {
+    var v = variants[i], s = chosen && chosen.id === v.id;
+    var total = (v.clip1 ? v.clip1.seconds : 9) + (v.clip2 ? v.clip2.seconds : 10) + (v.clip3 ? v.clip3.seconds : 7);
+    html += '<div class="vc' + (s ? ' sel' : '') + '" data-id="' + v.id + '">';
+    html += '<div class="vnum">' + (v.emoji||'🎬') + ' Story ' + v.id + '</div>';
+    html += '<div class="vtl">' + v.story_title + '</div>';
+    html += '<div class="vsi">' + v.situation + '</div>';
+    html += '<div class="vtgs"><span class="vtg">⏱️ ~' + total + ' sec</span><span class="vtg">3 clips</span></div>';
+    html += '<button class="bsel" data-day="' + day + '" data-id="' + v.id + '">✅ Choose This Story</button>';
+    html += '<div class="bselbdg">✅ Selected for ' + day + '</div></div>';
+  }
+  html += '</div>';
+  if (chosen) html += buildFull(chosen, day);
+  document.getElementById('caArea').innerHTML = html;
+  document.getElementById('regenBtn').addEventListener('click', function(){ delete dayVars[selDay]; selectDay(selDay); });
+  document.querySelectorAll('.bsel').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = parseInt(this.dataset.id), day2 = this.dataset.day;
+      var v = dayVars[day2].find(function(x){ return x.id === id; });
+      if (!v) return;
+      weekPlan[day2] = v; addHist(v);
+      renderDays(); renderPlan();
+      showVariants(day2, dayVars[day2]);
+      toast('✅ ' + day2 + ' planned!');
+    });
+  });
+  if (chosen) attachFullListeners();
+}
+
+function buildFull(v, day) {
+  var ig = v.instagram||{}, tt = v.tiktok||{}, xp = v.x||{}, yt = v.youtube||{};
+  var c1 = v.clip1||{}, c2 = v.clip2||{}, c3 = v.clip3||{};
+  var total = (c1.seconds||9) + (c2.seconds||10) + (c3.seconds||7);
+  var clips = [c1, c2, c3];
+  var colors = ['#f0c060','#ff6b35','#50d090'];
+  var html = '<div class="fp"><div class="fph">';
+  html += '<div class="fptl">🎬 ' + v.story_title + '</div>';
+  html += '<div class="fpbtns"><button class="bca" id="cpyAllBtn">📋 Copy All</button><button class="brm" id="setRemBtn" data-day="' + day + '">🗓️ Reminder</button></div></div>';
+  html += '<div class="total-bar">⏱️ Total: ~' + total + ' seconds · 3 clips · Edit in CapCut</div>';
+  html += '<div class="sec"><div class="sl">🎬 Kling AI Prompts — Film in Order</div><div class="clips-grid">';
+  for (var ci = 0; ci < clips.length; ci++) {
+    var cl = clips[ci];
+    html += '<div class="clip-card"><div class="clip-header">';
+    html += '<div class="clip-num" style="background:linear-gradient(135deg,' + colors[ci] + ',' + colors[(ci+1)%3] + ')">CLIP ' + (ci+1) + '</div>';
+    html += '<div class="clip-title">' + (cl.title||'') + '</div>';
+    html += '<div class="clip-timing">⏱️ ' + (cl.seconds||'?') + ' sec</div></div>';
+    html += '<div class="clip-prompt">' + (cl.prompt||'') + '<button class="cp" data-clip="' + ci + '">Copy</button></div>';
+    html += '<div style="font-size:12px;color:#f0c060;margin-top:6px">📝 ' + (cl.text_overlay||'') + '</div></div>';
+  }
+  html += '</div></div>';
+  html += '<div class="sec"><div class="sl">📱 Platform Content</div>';
+  html += '<div class="ptabs"><button class="ptab ig on" data-p="ig">📸 Instagram</button><button class="ptab tt" data-p="tt">🎵 TikTok</button><button class="ptab xp" data-p="xp">✕ X</button><button class="ptab yt" data-p="yt">▶️ YouTube</button></div>';
+  html += '<div class="pct on" id="pct-ig"><div class="ccol">';
+  html += '<div class="cbx" style="border-left:3px solid #E1306C"><div class="clb" style="color:#E1306C">Short & Punchy</div>' + (ig.caption_short||'') + '<button class="cp" data-txt="ig_s">Copy</button></div>';
+  html += '<div class="cbx" style="border-left:3px solid #ff6b35"><div class="clb" style="color:#ff6b35">Storytelling</div>' + (ig.caption_story||'') + '<button class="cp" data-txt="ig_st">Copy</button></div>';
+  html += '<div class="cbx" style="border-left:3px solid #50d090"><div class="clb" style="color:#50d090">Strong Hook</div>' + (ig.caption_hook||'') + '<button class="cp" data-txt="ig_h">Copy</button></div>';
+  html += '</div><div class="tbox" style="margin-top:8px">';
+  (ig.hashtags||[]).forEach(function(t){ html += '<span class="ht" data-tag="#'+t+'">#'+t+'</span>'; });
+  html += '</div><div class="cgr" style="margin-top:8px"><div class="cbx2"><div class="clb2">Story Poll</div>' + (ig.story_poll||'') + '</div></div></div>';
+  html += '<div class="pct" id="pct-tt"><div class="cbx" style="border-left:3px solid #69C9D0"><div class="clb" style="color:#69C9D0">Caption</div>' + (tt.caption||'') + '<button class="cp" data-txt="tt_c">Copy</button></div>';
+  html += '<div class="tbox" style="margin-top:7px">';
+  (tt.hashtags||[]).forEach(function(t){ html += '<span class="ht" data-tag="#'+t+'">#'+t+'</span>'; });
+  html += '</div><div class="cbx2" style="margin-top:7px"><div class="clb2">Sound</div>' + (tt.sound_suggestion||'') + '</div></div>';
+  html += '<div class="pct" id="pct-xp"><div class="cbx" style="border-left:3px solid #aaa"><div class="clb" style="color:#aaa">Tweet</div>' + (xp.tweet||'') + '<button class="cp" data-txt="xp_t">Copy</button></div>';
+  html += '<div class="tbox" style="margin-top:7px">';
+  (xp.hashtags||[]).forEach(function(t){ html += '<span class="ht" data-tag="#'+t+'">#'+t+'</span>'; });
+  html += '</div></div>';
+  html += '<div class="pct" id="pct-yt"><div class="cbx" style="border-left:3px solid #FF0000"><div class="clb" style="color:#FF0000">Title</div>' + (yt.title||'') + '<button class="cp" data-txt="yt_t">Copy</button></div>';
+  html += '<div class="cbx" style="margin-top:7px"><div class="clb">Caption</div>' + (yt.caption||'') + '</div>';
+  html += '<div class="tbox" style="margin-top:7px">';
+  (yt.hashtags||[]).forEach(function(t){ html += '<span class="ht" data-tag="#'+t+'">#'+t+'</span>'; });
+  html += '</div><div class="cbx2" style="margin-top:7px"><div class="clb2">Thumbnail Tip</div>' + (yt.thumbnail_tip||'') + '</div></div>';
+  html += '</div>';
+  html += '<div class="sec"><div class="sl">🎯 Tips</div><div class="tpbx">';
+  html += '<div class="tp"><span>🎬</span><div>Film each clip separately in Kling, then edit together in CapCut.</div></div>';
+  html += '<div class="tp"><span>⚡</span><div>Add text overlay in CapCut — not in Kling. Cleaner result.</div></div>';
+  html += '<div class="tp"><span>🔄</span><div>Post order: TikTok first → 30min → Instagram → X → YouTube Shorts</div></div>';
+  html += '</div></div></div>';
+  window._v = v; window._ig = ig; window._tt = tt; window._xp = xp; window._yt = yt;
+  return html;
+}
+
+function attachFullListeners() {
+  // Platform tabs
+  document.querySelectorAll('.ptab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      var p = this.dataset.p;
+      document.querySelectorAll('.ptab').forEach(function(t){ t.classList.remove('on'); });
+      this.classList.add('on');
+      document.querySelectorAll('.pct').forEach(function(c){ c.classList.remove('on'); });
+      var pc = document.getElementById('pct-' + p);
+      if (pc) pc.classList.add('on');
+    });
+  });
+  // Copy buttons
+  document.querySelectorAll('.cp[data-txt]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var k = this.dataset.txt, txt = '';
+      var ig = window._ig||{}, tt = window._tt||{}, xp = window._xp||{}, yt = window._yt||{};
+      if (k==='ig_s') txt = ig.caption_short||'';
+      else if (k==='ig_st') txt = ig.caption_story||'';
+      else if (k==='ig_h') txt = ig.caption_hook||'';
+      else if (k==='tt_c') txt = tt.caption||'';
+      else if (k==='xp_t') txt = xp.tweet||'';
+      else if (k==='yt_t') txt = yt.title||'';
+      navigator.clipboard.writeText(txt).then(function(){ toast('Copied!'); });
+    });
+  });
+  // Copy clip prompts
+  document.querySelectorAll('.cp[data-clip]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var ci = parseInt(this.dataset.clip);
+      var v = window._v;
+      var clips = [v.clip1, v.clip2, v.clip3];
+      navigator.clipboard.writeText(clips[ci] ? clips[ci].prompt||'' : '').then(function(){ toast('Prompt copied!'); });
+    });
+  });
+  // Copy all
+  var ca = document.getElementById('cpyAllBtn');
+  if (ca) ca.addEventListener('click', function() {
+    var v = window._v||{};
+    var txt = 'CLIP 1 (' + (v.clip1&&v.clip1.seconds||'?') + 'sec):\n' + (v.clip1&&v.clip1.prompt||'');
+    txt += '\n\nCLIP 2 (' + (v.clip2&&v.clip2.seconds||'?') + 'sec):\n' + (v.clip2&&v.clip2.prompt||'');
+    txt += '\n\nCLIP 3 (' + (v.clip3&&v.clip3.seconds||'?') + 'sec):\n' + (v.clip3&&v.clip3.prompt||'');
+    navigator.clipboard.writeText(txt).then(function(){ toast('All 3 prompts copied!'); });
+  });
+  // Reminder
+  var rb = document.getElementById('setRemBtn');
+  if (rb) rb.addEventListener('click', function(){ openReminder(this.dataset.day); });
+  // Hashtags
+  document.querySelectorAll('.ht').forEach(function(h) {
+    h.addEventListener('click', function(){
+      navigator.clipboard.writeText(this.dataset.tag).then(function(){ toast('Copied!'); });
+    });
+  });
+}
+
+// =====================
+// REMINDER
+// =====================
+function openReminder(day) {
+  document.getElementById('remDay').value = day;
+  document.getElementById('remModal').classList.add('show');
+}
+function addToCalendar() {
+  var day = document.getElementById('remDay').value;
+  var time = document.getElementById('remTime').value || '18:00';
+  var note = document.getElementById('remNote').value || 'Post video';
+  var now = new Date(), di = DAYS.indexOf(day);
+  var cur = now.getDay() === 0 ? 6 : now.getDay() - 1;
+  var diff = di - cur; if (diff < 0) diff += 7;
+  var pd = new Date(now); pd.setDate(now.getDate() + diff);
+  pd.setHours(parseInt(time.split(':')[0]), parseInt(time.split(':')[1]), 0, 0);
+  var ed = new Date(pd.getTime() + 30*60000);
+  function pad(n){ return n < 10 ? '0'+n : ''+n; }
+  function fmt(d){ return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'T'+pad(d.getHours())+pad(d.getMinutes())+'00'; }
+  var ics = 'BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nDTSTART:'+fmt(pd)+'\nDTEND:'+fmt(ed)+'\nSUMMARY:'+note+'\nBEGIN:VALARM\nTRIGGER:-PT30M\nACTION:DISPLAY\nDESCRIPTION:Time to post!\nEND:VALARM\nEND:VEVENT\nEND:VCALENDAR';
+  var blob = new Blob([ics], {type:'text/calendar'});
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'post-'+day.toLowerCase()+'.ics'; a.click();
+  document.getElementById('remModal').classList.remove('show');
+  toast('📅 Calendar reminder downloaded!');
+}
+
+// =====================
+// HISTORY MODAL
+// =====================
+function showHistModal() {
+  var h = getHist();
+  if (!h.length) { toast('No history yet!'); return; }
+  var html = '<div id="histModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:3000;display:flex;align-items:center;justify-content:center;">';
+  html += '<div style="background:#1a1a24;border:1px solid #2a2a3a;border-radius:16px;padding:28px;width:480px;max-width:92vw;max-height:80vh;overflow-y:auto;">';
+  html += '<div style="font-family:Playfair Display,serif;font-size:19px;font-weight:700;color:#f0c060;margin-bottom:16px;">📚 Story History (' + h.length + ')</div>';
+  for (var i = h.length-1; i >= 0; i--) {
+    html += '<div style="background:#13131a;border:1px solid #2a2a3a;border-radius:7px;padding:9px 13px;margin-bottom:5px;font-size:12px;display:flex;justify-content:space-between;">';
+    html += '<span>' + h[i].s + '</span><span style="color:#7070a0;margin-left:10px;white-space:nowrap">' + h[i].d + '</span></div>';
+  }
+  html += '<button id="closeHistBtn" style="width:100%;margin-top:18px;background:#2a2a3a;border:none;color:#e8e8f0;padding:11px;border-radius:9px;cursor:pointer;font-size:13px;font-family:DM Sans,sans-serif;">Close</button>';
+  html += '</div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+  document.getElementById('closeHistBtn').addEventListener('click', function(){
+    var m = document.getElementById('histModal'); if (m) m.remove();
+  });
+}
+
+// =====================
+// EVENT LISTENERS
+// =====================
+// API key managed server-side
+
+document.querySelectorAll('#hpills .pill').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('#hpills .pill').forEach(function(b){ b.classList.remove('ha'); });
+    this.classList.add('ha'); humor = this.dataset.v;
+  });
+});
+
+document.querySelectorAll('#tpills .pill').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('#tpills .pill').forEach(function(b){ b.classList.remove('ta'); });
+    this.classList.add('ta'); theme = this.dataset.v;
+    document.getElementById('custTheme').value = '';
+  });
+});
+
+document.getElementById('custTheme').addEventListener('input', function() {
+  if (this.value.trim()) {
+    document.querySelectorAll('#tpills .pill').forEach(function(b){ b.classList.remove('ta'); });
+    theme = this.value.trim();
+  }
+});
+
+document.getElementById('genBtn').addEventListener('click', generateWeek);
+document.getElementById('gen7Btn').addEventListener('click', generateWeek);
+document.getElementById('hclrBtn').addEventListener('click', function(){ localStorage.removeItem('gph'); updHCnt(); toast('History cleared!'); });
+document.getElementById('hvwBtn').addEventListener('click', showHistModal);
+document.getElementById('closeRemBtn').addEventListener('click', function(){ document.getElementById('remModal').classList.remove('show'); });
+document.getElementById('addCalBtn').addEventListener('click', addToCalendar);
+
+// Add Character Modal
+document.querySelectorAll('.ep').forEach(function(ep) {
+  ep.addEventListener('click', function() {
+    document.querySelectorAll('.ep').forEach(function(e){ e.classList.remove('sel'); });
+    this.classList.add('sel');
+    document.getElementById('acEmoji').value = this.textContent;
+  });
+});
+
+document.getElementById('acSaveBtn').addEventListener('click', function() {
+  var em = document.getElementById('acEmoji').value.trim() || '⭐';
+  var name = document.getElementById('acName').value.trim();
+  var shortDesc = document.getElementById('acShortDesc').value.trim();
+  var fullDesc = document.getElementById('acFullDesc').value.trim();
+  if (!name || !fullDesc) { toast('Please fill in name and full description!'); return; }
+  var chars = getCustomChars();
+  chars.push({ id: 'custom_' + Date.now(), em: em, name: name, desc: shortDesc || name, full: fullDesc });
+  saveCustomChars(chars);
+  document.getElementById('addCharModal').classList.remove('show');
+  document.getElementById('acEmoji').value = '';
+  document.getElementById('acName').value = '';
+  document.getElementById('acShortDesc').value = '';
+  document.getElementById('acFullDesc').value = '';
+  document.querySelectorAll('.ep').forEach(function(e){ e.classList.remove('sel'); });
+  renderCharGrid();
+  toast('✅ ' + name + ' added!');
+});
+
+document.getElementById('acCancelBtn').addEventListener('click', function() {
+  document.getElementById('addCharModal').classList.remove('show');
+});
+
+// Paywall
+document.getElementById('pwSubmitBtn').addEventListener('click', function() {
+  var val = document.getElementById('pwInput').value.trim();
+  if (val === ACCESS_PASS) {
+    localStorage.setItem('gp_unlocked', '1');
+    document.getElementById('pwModal').classList.remove('show');
+    updateBadge(); toast('🎉 Full access unlocked!');
+  } else {
+    document.getElementById('pwErr').style.display = 'block';
+    document.getElementById('pwInput').value = '';
+  }
+});
+document.getElementById('pwInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') document.getElementById('pwSubmitBtn').click();
+});
+document.getElementById('pwEmailBtn').addEventListener('click', function() {
+  window.open('mailto:cristinageaf@gmail.com?subject=AI Character Studio Access&body=Hi! I want full access to AI Character Studio. Please send me the password.');
+});
+
+// =====================
+// INIT
+// =====================
+var sk = localStorage.getItem('gpk');
+if (sk) document.getElementById('apiKey').value = sk;
+var now = new Date();
+document.getElementById('wlbl').textContent = 'Week of ' + now.toLocaleDateString('en-US', {month:'long', day:'numeric'});
+currentChar = DEFAULT_CHARS[0];
+updateBadge(); updHCnt();
+renderCharGrid(); renderDays(); renderPlan();
+</script>
+</body>
+</html>
