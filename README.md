@@ -160,7 +160,7 @@ Frontend Developer | AI-Powered Web Apps | Rapid Prototyping
 
 - 🌐 Portfolio: [www.cristinageafar.com](https://www.cristinageafar.com)
 - 💼 GitHub: [@crisgea71](https://github.com/crisgea71)
-- 📧 Contact: [your-email@example.com] *(add your real email sau șterge linia)*
+- 📧 Contact: [crisgea71@yahoo.com] 
 - 📍 Location: Constanța, Romania (open to remote/relocation)
 
 **Looking for:**
