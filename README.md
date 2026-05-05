@@ -47,6 +47,24 @@
 ---
 ---
 
+---
+
+## 📸 Screenshots
+
+### Homepage - Character & Theme Selection
+![AI Character Studio Homepage](screenshot-homeopage.png)
+*Choose your character, humor style, and weekly theme*
+
+### Weekly Calendar - Story Planning
+![Weekly Story Calendar](screenshot-calendar.png)
+*Select days and view story options*
+
+### Generated Story Output
+![Complete Story with Kling Prompts](screenshot-output.png)
+*Ready-to-use Kling AI prompts, captions, hashtags, and tips*
+
+---
+
 ## 🎨 Development Approach
 
 This project showcases **AI-assisted rapid prototyping**:
