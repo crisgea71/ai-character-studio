@@ -1,196 +1,73 @@
 # 🎬 AI Character Studio
 
-> Generate viral 3-clip video stories for any character — powered by AI
+**Generate complete 3-clip viral video stories for any character — powered by AI.**
 
-**AI Character Studio** is a web-based content creation tool that generates complete 3-clip Kling AI video stories for social media. Pick a character, choose a humor style and weekly theme, and get ready-to-film Kling prompts + captions for Instagram, TikTok, X, and YouTube Shorts.
+Turn any character into a consistent short-form content machine. Pick a character, humor style, and weekly theme, then get ready-to-use **Kling AI prompts + captions** perfect for TikTok, Instagram Reels, YouTube Shorts, and X.
 
-🔗 **Live demo:** [ai-character-studio.netlify.app](https://ai-character-studio.netlify.app)
-
----
-
-## ✨ Features
-
-- 🎭 **6 built-in characters** — Grandpa, Baby CEO, Dramatic Cat, Karen, Confused Robot, Old Wizard
-- ➕ **Add custom characters** — describe any character and the AI generates stories in their style
-- 🎬 **3-clip story format** — Setup + Chaos + Punchline (~26 seconds total, ready to edit in CapCut)
-- 😂 **5 humor styles** — Absurd-Ironic, Dry Humour, Slapstick, Dark Comedy, Wholesome
-- 🎯 **9 weekly themes** — Technology, Nature, Sport, Vacation, Animals, Social, Food, Shopping, Kids
-- 📱 **4 platforms** — Instagram, TikTok, X (Twitter), YouTube Shorts
-- 📋 **Copy-ready content** — Kling prompts, captions, hashtags, story polls, sound suggestions
-- 📅 **Mac Calendar reminders** — .ics file for posting schedule
-- 📚 **Story history** — never repeats the same situation
-- 🔒 **Paywall** — 3 free stories, password for full access
+🔗 **Live Demo**: [ai-character-studio.netlify.app](https://ai-character-studio.netlify.app)
 
 ---
 
-## 🚀 How It Works
+### ✨ Features
 
-```
+- **6 Built-in Characters**: Grandpa, Baby CEO, Dramatic Cat, Karen, Confused Robot, Old Wizard
+- **Custom Characters**: Describe any character and generate stories in their unique style
+- **3-Clip Viral Formula**: Setup → Chaos → Punchline (~26 seconds total)
+- **5 Humor Styles**: Absurd-Ironic, Dry Humour, Slapstick, Dark Comedy, Wholesome
+- **9 Weekly Themes**: Technology, Nature, Sport, Vacation, Animals, Social, Food, Shopping, Kids
+- **Ready-to-post content**: Kling AI prompts, catchy captions, hashtags, sound suggestions & polls
+- **Mac Calendar Export**: Download .ics file with your full posting schedule
+- **Story History**: Avoids repeating the same situations
+- **Paywall**: 3 free stories, password-protected full access
+
+---
+
+### 🚀 How It Works
+
 1. Choose your character
-2. Pick humor style + weekly theme
-3. Click a day of the week
-4. Get 3 complete story ideas
-5. Each story = 3 Kling AI prompts ready to film
-6. Edit clips in CapCut
-7. Post on all platforms with ready-made captions
-```
+2. Select humor style + weekly theme
+3. Click on any day of the week
+4. Get 3 complete story packs (each with 3 Kling prompts)
+5. Copy prompts → Generate in Kling AI → Edit in CapCut → Post
 
 ---
 
-## 🛠️ Tech Stack
+### 📸 Screenshots
 
-- **Frontend** — Vanilla HTML, CSS, JavaScript (single file, no framework)
-- **Backend** — Netlify Functions (Node.js serverless)
-- **AI** — Groq API (Llama 3.3 70B)
-- **Hosting** — Netlify (free tier)
+![Homepage](screenshot-homeopage.png)
+*Character & theme selection*
 
----
----
+![Calendar](screenshot-calendar.png)
+*Weekly planning calendar*
 
----
-
-## 📸 Screenshots
-
-### Homepage - Character & Theme Selection
-![AI Character Studio Homepage](screenshot-homeopage.png)
-*Choose your character, humor style, and weekly theme*
-
-### Weekly Calendar - Story Planning
-![Weekly Story Calendar](screenshot-calendar.png)
-*Select days and view story options*
-
-### Generated Story Output
-![Complete Story with Kling Prompts](screenshot-output.png)
-*Ready-to-use Kling AI prompts, captions, hashtags, and tips*
+![Output](screenshot-output.png)
+*Generated Kling prompts and captions*
 
 ---
 
-## 🎨 Development Approach
+### 🛠️ Tech Stack
 
-This project showcases **AI-assisted rapid prototyping**:
-
-- ⚡ Built in **3 days** from concept to deployed product
-- 🤖 Developed with **Claude AI** assistance (code generation, debugging, optimization)
-- 🎯 Focus: **solve real creator problems fast**, not perfect code
-- 💰 **$0 cost** to build (free APIs + free hosting)
-
-**Philosophy:** AI is a productivity tool (like calculators for math). I build useful products quickly by leveraging AI for code, focusing my energy on product strategy and user experience.
+- **Frontend**: Vanilla HTML + CSS + JavaScript (single file)
+- **Backend**: Netlify Functions (Node.js)
+- **AI Model**: Groq + Llama 3.3 70B
+- **Hosting**: Netlify (free tier)
 
 ---
 
-## 📁 Project Structure
+### 💡 Content Strategy
 
-```
-ai-studio/
-├── index.html              # Main app (frontend)
-├── netlify.toml            # Netlify configuration
-└── netlify/
-    └── functions/
-        └── generate.js     # Serverless function (API calls)
-```
+Each story follows the proven **3-clip viral structure**:
+- **Clip 1 – The Setup** (8-9s)
+- **Clip 2 – The Chaos** (9-10s)
+- **Clip 3 – The Punchline** (6-8s)
+
+Total runtime ≈ 26 seconds — ideal for Reels, TikTok, and Shorts.
 
 ---
 
-## 🔧 Setup & Deploy
+### 🔧 Quick Setup & Deploy
 
-### 1. Clone the repo
-```bash
-git clone https://github.com/YOUR_USERNAME/ai-character-studio.git
-cd ai-character-studio
-```
-
-### 2. Add your Groq API key
-Open `netlify/functions/generate.js` and replace:
-```javascript
-const GROQ_KEY = 'your_groq_api_key_here';
-```
-Get a free key at [console.groq.com](https://console.groq.com)
-
-### 3. Set your access password
-In `index.html`, find and change:
-```javascript
-var ACCESS_PASS = 'your_password_here';
-```
-
-### 4. Deploy to Netlify
-- Go to [netlify.com](https://netlify.com)
-- Drag and drop the `ai-studio` folder
-- Done! Your app is live.
-
-### 5. Run locally
-```bash
-cd ai-studio
-python3 -m http.server 3000
-# Open http://localhost:3000
-```
-
----
-
-## 💡 Content Strategy
-
-Each story follows the **3-clip viral formula:**
-
-| Clip | Name | Duration | Purpose |
-|------|------|----------|---------|
-| Clip 1 | The Setup | 8-9 sec | Character confidently starts something ridiculous |
-| Clip 2 | The Chaos | 9-10 sec | Everything goes wrong, escalates |
-| Clip 3 | The Punchline | 6-8 sec | Twist ending + dignity moment |
-
-**Total: ~26 seconds** — perfect for Instagram Reels, TikTok, YouTube Shorts
-
----
-
-## 📊 Posting Strategy
-
-```
-Film in Kling → Edit in CapCut → Post on TikTok first
-→ Wait 30 min → Instagram → X → YouTube Shorts
-```
-
----
-
-## 🔒 Access Control
-
-- **Free:** 3 story generations
-- **Full access:** Password protected
-- Change the password in `index.html`: `var ACCESS_PASS = 'your_password';`
-
----
-
-## 📄 License
-
-MIT License — free to use and modify.
-
----
-
-## 🙏 Credits
-
-Built with [Groq](https://groq.com) · Deployed on [Netlify](https://netlify.com) · Videos generated with [Kling AI](https://klingai.com)
-
----
-
----
-
-## 👩‍💻 About the Developer
-
-**Cristina Geafar**  
-Frontend Developer | AI-Powered Web Apps | Rapid Prototyping
-
-- 🌐 Portfolio: [www.cristinageafar.com](https://www.cristinageafar.com)
-- 💼 GitHub: [@crisgea71](https://github.com/crisgea71)
-- 📧 Contact: [crisgea71@yahoo.com] 
-- 📍 Location: Constanța, Romania (open to remote/relocation)
-
-**Looking for:**
-- Freelance AI integration projects
-- Remote frontend/AI development roles
-- Opportunities in UAE/Oman tech ecosystems
-
----
-
-**⭐ If this project helped you, star the repo!**  
-**💬 Questions? Open an issue or reach out directly.**
-
----
-
-*Last updated: May 2026*
+1. Clone the repo
+   ```bash
+   git clone https://github.com/crisgea71/ai-character-studio.git
+   cd ai-character-studio
